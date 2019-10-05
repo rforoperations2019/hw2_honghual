@@ -34,7 +34,7 @@ realestate<- readOGR("realestate.geojson")
 #plot(school)
 #summary(school)
 #plot(realestate)
-summary(realestate)
+#summary(realestate)
 
 ```
 #Map of Fires Incidents
@@ -60,11 +60,12 @@ leaflet(data=pipe) %>%
 
 
 ```{r}
-leaflet() %>%
+leaflet(data = school) %>%
   # Basemaps
   addTiles(group = "OSM (default)") %>%
   addProviderTiles("Stamen.Toner", group = "Toner") %>%
-  addProviderTiles("Stamen.TonerLite", group = "Toner Lite") %>%
+  addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
+  addProviderTiles("Stamen.TonerLite", group = "Toner Lite")
   # Layers control
   addLayersControl(
     baseGroups = c("OSM (default)", "Toner", "Toner Lite"),
@@ -73,6 +74,8 @@ leaflet() %>%
 ```
 
 ```{r}
+
+  
 
 ```
 
