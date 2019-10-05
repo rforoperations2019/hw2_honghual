@@ -71,9 +71,12 @@ leaflet() %>%
   addLayersControl(
     baseGroups = c("Toner", "Terrain", "Toner Lite"),
     options = layersControlOptions(collapsed = FALSE)) %>%
-  addPolygons(data = realestate, group = c("Toner","Terrain", "Toner Lite"))
-
+  #Adding polyong to show boundary and pop up to show names of properties
+  addPolygons(data = realestate, popup = ~NAME, color = "blue", group = c("Toner","Terrain", "Toner Lite"))
   
-```
+````
 
+```{r}
+summary(realestate)
+```
 
