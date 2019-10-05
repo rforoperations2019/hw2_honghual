@@ -1,0 +1,78 @@
+---
+title: "HW2_leaflet"
+author: "Nicole Li"
+date: "October 4, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+require(rgdal)
+require(leaflet)
+require(leaflet.extras)
+
+require(dplyr)
+require(readxl)
+require(stringr)
+```
+
+## Loading in all datasets from data.gov
+#https://catalog.data.gov/dataset/loudoun-stormwater-pipes-5afb6
+```{r} 
+fire<- readOGR("fire.geojson")
+pipe<- readOGR("pipes.geojson")
+school<- readOGR("school.geojson")
+realestate<- readOGR("realestate.geojson")
+
+
+```
+
+
+
+```{r pressure, echo=FALSE}
+#plot(fire)
+#summary(fire)
+#plot(school)
+#summary(school)
+#plot(realestate)
+summary(realestate)
+
+```
+#Map of Fires Incidents
+```{r}
+firepalette<- colorFactor(palette = "YlOrRd", domain = fire$year)
+
+leaflet() %>% 
+  addProviderTiles("Stamen.Terrain") %>%
+  addCircleMarkers(data = fire, color = ~firepalette(year), radius = 3, fillOpacity = 0.2,clusterOptions = markerClusterOptions()) %>% 
+  addLegend(position = "topright" , pal = firepalette, values = fire$year, title = "Year")
+```
+
+#Map of stormwater pipes
+```{r}
+
+pipepalette<- colorNumeric(palette = "Spectral", domain = pipe$Pipe_Diam)
+
+leaflet(data=pipe) %>% 
+  addProviderTiles("Stamen.Terrain") %>%
+  addPolylines(color = ~pipepalette(Pipe_Diam))
+```
+
+
+
+```{r}
+leaflet() %>%
+  # Basemaps
+  addTiles(group = "OSM (default)") %>%
+  addProviderTiles("Stamen.Toner", group = "Toner") %>%
+  addProviderTiles("Stamen.TonerLite", group = "Toner Lite") %>%
+  # Layers control
+  addLayersControl(
+    baseGroups = c("OSM (default)", "Toner", "Toner Lite"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+```{r}
+
+```
+
