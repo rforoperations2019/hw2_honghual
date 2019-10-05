@@ -25,7 +25,7 @@ realestate<- readOGR("realestate.geojson")
 #Looking at the attributes and statistics of data
 ```{r pressure, echo=FALSE}
 #plot(fire)
-#summary(fire)
+summary(fire)
 #plot(pipes)
 #summary(pipes)
 #plot(realestate)
@@ -42,9 +42,18 @@ leaflet() %>%
   # creating Basemaps
   addProviderTiles("Stamen.Terrain") %>%
   #creating markers for the fire incidents location
-  addCircleMarkers(data = fire, color = ~firepalette(year), radius = 3, fillOpacity = 0.2,clusterOptions = markerClusterOptions()) %>% 
+  addCircleMarkers(data = fire, 
+                   color = ~firepalette(year),
+                   #pop up shows category of incident ie EMS arrived, false alerms etc.
+                   popup = ~majorcategory, 
+                   radius = 3, 
+                   fillOpacity = 0.2,
+                   clusterOptions = markerClusterOptions()) %>% 
   #adding legend showing colors associated with the year
-  addLegend(position = "topright" , pal = firepalette, values = fire$year, title = "Year")
+  addLegend(position = "topright" , 
+            pal = firepalette, 
+            values = fire$year, 
+            title = "Year")
 ```
 
 #Map of stormwater pipes
@@ -67,13 +76,17 @@ leaflet() %>%
   addProviderTiles("Stamen.Toner", group = "Toner") %>%
   addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
   addProviderTiles("Stamen.TonerLite", group = "Toner Lite")%>%
+
+  #Adding polyon to show boundary and pop up to show names of properties
+  addPolygons(data = realestate, color = "blue", group = "Boundaries")  %>%
+  addPolygons(data = realestate, color = "Red", popup = ~NAME, group = "Property Name")%>%
+  
   # Layers control
   addLayersControl(
     baseGroups = c("Toner", "Terrain", "Toner Lite"),
-    options = layersControlOptions(collapsed = FALSE)) %>%
-  #Adding polyong to show boundary and pop up to show names of properties
-  addPolygons(data = realestate, popup = ~NAME, color = "blue", group = c("Toner","Terrain", "Toner Lite"))
-  
+    #one layer with just boundaries, another with its property name
+    overlayGroups = c("Boundaries", "Property Name"),
+    options = layersControlOptions(collapsed = FALSE))
 ````
 
 ```{r}
