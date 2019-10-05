@@ -9,7 +9,6 @@ output: html_document
 require(rgdal)
 require(leaflet)
 require(leaflet.extras)
-
 require(dplyr)
 require(readxl)
 require(stringr)
@@ -39,21 +38,24 @@ realestate<- readOGR("realestate.geojson")
 #Fire incidents colored by different Years 2015-2019
 firepalette<- colorFactor(palette = "YlOrRd", domain = fire$year)
 
-#creating markers for the fire incidents location
 leaflet() %>% 
+  # creating Basemaps
   addProviderTiles("Stamen.Terrain") %>%
+  #creating markers for the fire incidents location
   addCircleMarkers(data = fire, color = ~firepalette(year), radius = 3, fillOpacity = 0.2,clusterOptions = markerClusterOptions()) %>% 
+  #adding legend showing colors associated with the year
   addLegend(position = "topright" , pal = firepalette, values = fire$year, title = "Year")
 ```
 
 #Map of stormwater pipes
 ```{r}
-#Distinguishing Pipes by making the bigger piepes redder
+#Distinguishing Pipes by making the bigger piepes greener
 pipepalette<- colorNumeric(palette = "Spectral", domain = pipe$Pipe_Diam, reverse= TRUE)
 
-# creating lines for the location of the pipes
 leaflet(data=pipe) %>% 
+  # creating base map
   addProviderTiles("Stamen.Toner") %>%
+  # creating lines for the location of the pipes
   addPolylines(color = ~pipepalette(Pipe_Diam))
 ```
 
@@ -61,7 +63,7 @@ leaflet(data=pipe) %>%
 #Creating map of real estate subdivision
 ```{r}
 leaflet() %>%
-  # Basemaps
+  # creating Basemaps
   addProviderTiles("Stamen.Toner", group = "Toner") %>%
   addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
   addProviderTiles("Stamen.TonerLite", group = "Toner Lite")%>%
@@ -74,6 +76,4 @@ leaflet() %>%
   
 ```
 
-
-```
 
