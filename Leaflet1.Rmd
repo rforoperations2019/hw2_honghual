@@ -26,8 +26,8 @@ realestate<- readOGR("realestate.geojson")
 ```{r pressure, echo=FALSE}
 #plot(fire)
 summary(fire)
-#plot(pipes)
-#summary(pipes)
+#plot(pipe)
+#summary(pipe)
 #plot(realestate)
 #summary(realestate)
 
@@ -48,7 +48,7 @@ leaflet() %>%
                    popup = ~majorcategory, 
                    radius = 3, 
                    fillOpacity = 0.2,
-                   clusterOptions = markerClusterOptions()) %>% 
+                   clusterOptions = markerClusterOptions(showCoverageOnHover = TRUE)) %>% 
   #adding legend showing colors associated with the year
   addLegend(position = "topright" , 
             pal = firepalette, 
@@ -89,7 +89,4 @@ leaflet() %>%
     options = layersControlOptions(collapsed = FALSE))
 ````
 
-```{r}
-summary(realestate)
-```
 
