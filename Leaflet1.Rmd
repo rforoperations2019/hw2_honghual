@@ -18,29 +18,28 @@ require(stringr)
 ## Loading in all datasets from data.gov
 #https://catalog.data.gov/dataset/loudoun-stormwater-pipes-5afb6
 ```{r} 
-fire<- readOGR("fire.geojson")
+fire<- readOGR("fire.geojson")   
 pipe<- readOGR("pipes.geojson")
-school<- readOGR("school.geojson")
 realestate<- readOGR("realestate.geojson")
-
-
 ```
 
-
-
+#Looking at the attributes and statistics of data
 ```{r pressure, echo=FALSE}
 #plot(fire)
 #summary(fire)
-#plot(school)
-#summary(school)
+#plot(pipes)
+#summary(pipes)
 #plot(realestate)
 #summary(realestate)
 
 ```
+
 #Map of Fires Incidents
 ```{r}
+#Fire incidents colored by different Years 2015-2019
 firepalette<- colorFactor(palette = "YlOrRd", domain = fire$year)
 
+#creating markers for the fire incidents location
 leaflet() %>% 
   addProviderTiles("Stamen.Terrain") %>%
   addCircleMarkers(data = fire, color = ~firepalette(year), radius = 3, fillOpacity = 0.2,clusterOptions = markerClusterOptions()) %>% 
@@ -49,33 +48,32 @@ leaflet() %>%
 
 #Map of stormwater pipes
 ```{r}
+#Distinguishing Pipes by making the bigger piepes redder
+pipepalette<- colorNumeric(palette = "Spectral", domain = pipe$Pipe_Diam, reverse= TRUE)
 
-pipepalette<- colorNumeric(palette = "Spectral", domain = pipe$Pipe_Diam)
-
+# creating lines for the location of the pipes
 leaflet(data=pipe) %>% 
-  addProviderTiles("Stamen.Terrain") %>%
+  addProviderTiles("Stamen.Toner") %>%
   addPolylines(color = ~pipepalette(Pipe_Diam))
 ```
 
 
-
+#Creating map of real estate subdivision
 ```{r}
-leaflet(data = school) %>%
+leaflet() %>%
   # Basemaps
-  addTiles(group = "OSM (default)") %>%
   addProviderTiles("Stamen.Toner", group = "Toner") %>%
   addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
-  addProviderTiles("Stamen.TonerLite", group = "Toner Lite")
+  addProviderTiles("Stamen.TonerLite", group = "Toner Lite")%>%
   # Layers control
   addLayersControl(
-    baseGroups = c("OSM (default)", "Toner", "Toner Lite"),
-    options = layersControlOptions(collapsed = FALSE)
-  )
-```
-
-```{r}
+    baseGroups = c("Toner", "Terrain", "Toner Lite"),
+    options = layersControlOptions(collapsed = FALSE)) %>%
+  addPolygons(data = realestate, group = c("Toner","Terrain", "Toner Lite"))
 
   
+```
+
 
 ```
 
